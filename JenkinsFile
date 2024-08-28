@@ -13,54 +13,6 @@ pipeline {
             steps {
                 bat 'mvn test'
             }
-        }
-    }
-    post {
-        always {
-            junit '**/target/surefire-reports/*.xml'
-        }
-    }
-stage('Coverage with Jacoco') {
-            steps {
-                // Comando para generar el informe de cobertura con JaCoCo en Windows
-                bat 'mvn jacoco:report'
-            }
-        }
-
-    post {
-        always {
-            // Publicar el informe de JaCoCo en Jenkins
-            jacoco execPattern: '**/target/jacoco.exec',
-                   classPattern: '**/target/classes',
-                   sourcePattern: '**/src/main/java',
-                   exclusionPattern: '**/target/test-classes'
-        }
-        success {
-            // Notificación en Slack (opcional)
-            slackSend channel: '#mi-canal', color: 'good', message: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} fue exitoso."
-        }
-        failure {
-            // Notificación en Slack (opcional)
-            slackSend channel: '#mi-canal', color: 'danger', message: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} falló."
-        }
-    }
-}
-
-pipeline {
-    agent any
- tools {
-        maven 'maven'
-    }
-    stages {
-        stage('Build') {
-            steps {
-                bat 'mvn clean compile'
-            }
-        }
-        stage('Test') {
-            steps {
-                bat 'mvn test'
-            }
             post {
                 always {
                     junit '**/target/surefire-reports/*.xml'
@@ -73,7 +25,6 @@ pipeline {
             }
         }
     }
-
     post {
         always {
             jacoco execPattern: '**/target/jacoco.exec',

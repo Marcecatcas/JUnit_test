@@ -46,3 +46,47 @@ stage('Coverage with Jacoco') {
     }
 }
 
+pipeline {
+    agent any
+ tools {
+        maven 'maven'
+    }
+    stages {
+        stage('Build') {
+            steps {
+                bat 'mvn clean compile'
+            }
+        }
+        stage('Test') {
+            steps {
+                bat 'mvn test'
+            }
+            post {
+                always {
+                    junit '**/target/surefire-reports/*.xml'
+                }
+            }
+        }
+        stage('Coverage with Jacoco') {
+            steps {
+                bat 'mvn jacoco:report'
+            }
+        }
+    }
+
+    post {
+        always {
+            jacoco execPattern: '**/target/jacoco.exec',
+                   classPattern: '**/target/classes',
+                   sourcePattern: '**/src/main/java',
+                   exclusionPattern: '**/target/test-classes'
+        }
+        success {
+            slackSend channel: '#mi-canal', color: 'good', message: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} fue exitoso."
+        }
+        failure {
+            slackSend channel: '#mi-canal', color: 'danger', message: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} falló."
+        }
+    }
+}
+

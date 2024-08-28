@@ -1,26 +1,26 @@
 pipeline {
     agent any
-
+    tools {
+        maven 'maven'
+    }
     stages {
-        stage('Compilar') {
+        stage('Build') {
             steps {
-                // Comando para compilar el proyecto en Windows
                 bat 'mvn clean compile'
             }
         }
-        stage('Ejecutar Pruebas Unitarias') {
+        stage('Test') {
             steps {
-                // Comando para ejecutar las pruebas en Windows
                 bat 'mvn test'
             }
-            post {
-                always {
-                    // Publicar resultados de JUnit en Jenkins
-                    junit '**/target/surefire-reports/*.xml'
-                }
-            }
         }
-        stage('Generar Informe de Cobertura con JaCoCo') {
+    }
+    post {
+        always {
+            junit '**/target/surefire-reports/*.xml'
+        }
+    }
+stage('Coverage with Jacoco') {
             steps {
                 // Comando para generar el informe de cobertura con JaCoCo en Windows
                 bat 'mvn jacoco:report'
@@ -46,3 +46,4 @@ pipeline {
         }
     }
 }
+

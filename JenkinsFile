@@ -45,5 +45,5 @@ stage('Coverage with Jacoco') {
             slackSend channel: '#mi-canal', color: 'danger', message: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} falló."
         }
     }
-}
+
 

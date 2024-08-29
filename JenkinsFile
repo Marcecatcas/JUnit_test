@@ -33,10 +33,10 @@ pipeline {
                    exclusionPattern: '**/target/test-classes'
         }
         success {
-            slackSend channel: '#mi-canal', color: 'good', message: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} fue exitoso."
+            slackSend channel: '#builds', color: 'good', message: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} fue exitoso."
         }
         failure {
-            slackSend channel: '#mi-canal', color: 'danger', message: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} falló."
+            slackSend channel: '#builds', color: 'danger', message: "Build ${env.JOB_NAME} #${env.BUILD_NUMBER} falló."
         }
     }
 }
